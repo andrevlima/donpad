@@ -65,30 +65,38 @@ function welcomePage() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>donpad local</title>
+<title>DON PAD</title>
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: -apple-system, system-ui, sans-serif; max-width: 640px; margin: 10vh auto; padding: 0 20px; color: #222; background: #fff; }
-  @media (prefers-color-scheme: dark) { body { color: #eee; background: #111; } input { background: #222; color: #eee; border-color: #444; } }
-  h1 { font-size: 1.4rem; }
-  p { color: #666; line-height: 1.5; }
-  form { display: flex; gap: 8px; margin-top: 24px; }
-  input { flex: 1; font-size: 1rem; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; }
-  button { font-size: 1rem; padding: 10px 16px; border: none; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer; }
-  button:hover { background: #1d4ed8; }
-  code { background: rgba(127,127,127,.15); padding: 2px 5px; border-radius: 4px; }
+  ${cyberStyles()}
+  .wrap { max-width: 640px; margin: 8vh auto; padding: 0 20px; }
+  .card { border: 1px solid var(--border); background: var(--panel); border-radius: 10px; padding: 32px 28px; box-shadow: 0 0 40px rgba(0,230,160,.06), inset 0 0 60px rgba(0,230,160,.03); }
+  h1 { font-size: 2.4rem; margin: 0; letter-spacing: .12em; text-shadow: 0 0 14px rgba(0,230,160,.55); }
+  .sub { color: var(--dim); letter-spacing: .25em; font-size: .72rem; text-transform: uppercase; margin: 6px 0 22px; }
+  p { color: var(--dim); line-height: 1.7; }
+  p .prompt { color: var(--accent); }
+  form { display: flex; gap: 8px; margin: 26px 0 14px; }
+  input { flex: 1; font-family: inherit; font-size: 1rem; padding: 12px 14px; background: #04100b; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; caret-color: var(--accent); }
+  input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,230,160,.15); }
+  input::placeholder { color: #3b6657; }
+  button { font-family: inherit; font-size: .95rem; padding: 12px 20px; border: 1px solid var(--accent); border-radius: 6px; background: transparent; color: var(--accent); cursor: pointer; text-shadow: 0 0 8px rgba(0,230,160,.4); }
+  button:hover { background: rgba(0,230,160,.1); }
+  .hint { font-size: .8rem; color: #4a7465; margin-top: 18px; }
+  code { color: var(--accent); background: rgba(0,230,160,.08); padding: 2px 6px; border-radius: 4px; }
 </style>
 </head>
 <body>
-  <h1>donpad (versão local)</h1>
-  <p>Digite qualquer nome na barra de endereço depois da barra, por exemplo
-  <code>${baseUrlHint()}/minha-nota</code>, e um bloco de texto será criado automaticamente.
-  Ele é salvo sozinho enquanto você digita, e qualquer pessoa na mesma rede com o link pode ver ou editar.</p>
-  <form id="f">
-    <input id="pad" placeholder="nome-do-bloco" autofocus>
-    <button type="submit">Abrir</button>
-  </form>
-  <p>Acesse <code>/&lt;nome&gt;/raw</code> para ver só o texto puro, ou <code>/&lt;nome&gt;/download</code> para baixar como .txt.</p>
+  <div class="wrap">
+    <div class="card">
+      <h1>♛ DON&nbsp;PAD</h1>
+      <div class="sub">o don dos blocos de texto</div>
+      <p><span class="prompt">&gt;</span> diga o nome do bloco e o Don providencia. Qualquer caminho vira um bloco novo — ex.: <code>/minha-nota</code>. Salva sozinho enquanto você escreve, e todo mundo com o link enxerga e edita.</p>
+      <form id="f">
+        <input id="pad" placeholder="nome-do-bloco" autofocus autocomplete="off" spellcheck="false">
+        <button type="submit">entrar</button>
+      </form>
+      <p class="hint"><span class="prompt">$</span> <code>/&lt;nome&gt;/raw</code> → texto puro &nbsp;·&nbsp; <code>/&lt;nome&gt;/download</code> → baixar .txt</p>
+    </div>
+  </div>
   <script>
     document.getElementById('f').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -100,8 +108,28 @@ function welcomePage() {
 </html>`;
 }
 
-function baseUrlHint() {
-  return '';
+function cyberStyles() {
+  return `
+  :root {
+    --bg: #050907;
+    --panel: #0a1310;
+    --border: #16352a;
+    --fg: #d7fbe8;
+    --dim: #6ea08c;
+    --accent: #00e6a0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-monospace, 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+    background-image:
+      radial-gradient(ellipse at top, rgba(0,230,160,.05), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(0,230,160,.02) 0px, rgba(0,230,160,.02) 1px, transparent 1px, transparent 3px);
+  }
+  a { color: var(--accent); }
+  `;
 }
 
 function editorPage(padPath, content) {
@@ -112,41 +140,51 @@ function editorPage(padPath, content) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(padPath)} · donpad</title>
+<title>${escapeHtml(padPath)} · DON PAD</title>
 <style>
-  :root { color-scheme: light dark; }
-  html, body { height: 100%; margin: 0; }
-  body { font-family: -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; background: #fff; color: #222; }
-  @media (prefers-color-scheme: dark) { body { background: #111; color: #eee; } textarea { background: #111; color: #eee; } header { background: #1a1a1a !important; border-color: #333 !important; } a { color: #8ab4ff; } }
-  header { display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: #f5f5f5; border-bottom: 1px solid #ddd; font-size: 13px; flex-wrap: wrap; }
-  header a { color: #2563eb; text-decoration: none; }
-  header a:hover { text-decoration: underline; }
-  #status { margin-left: auto; color: #888; }
-  textarea { flex: 1; width: 100%; border: none; outline: none; resize: none; padding: 18px; font-size: 16px; line-height: 1.5; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; box-sizing: border-box; }
+  ${cyberStyles()}
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; }
+  header { display: flex; align-items: center; gap: 14px; padding: 10px 18px; background: var(--panel); border-bottom: 1px solid var(--border); font-size: 13px; flex-wrap: wrap; }
+  header .logo { color: var(--accent); text-shadow: 0 0 8px rgba(0,230,160,.5); letter-spacing: .08em; }
+  header .pad-name { color: var(--fg); }
+  header .pad-name::before { content: '/'; color: var(--dim); }
+  header a { color: var(--dim); text-decoration: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 9px; }
+  header a:hover { color: var(--accent); border-color: var(--accent); }
+  #status { margin-left: auto; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+  #status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  #status.error .dot { background: #ff4d6a; box-shadow: 0 0 6px #ff4d6a; }
+  textarea { flex: 1; width: 100%; border: none; outline: none; resize: none; padding: 20px; font-size: 16px; line-height: 1.6; font-family: inherit; box-sizing: border-box; background: var(--bg); color: var(--fg); caret-color: var(--accent); }
+  textarea::placeholder { color: #3b6657; }
 </style>
 </head>
 <body>
   <header>
-    <strong>/${escapeHtml(padPath)}</strong>
+    <span class="logo">♛ DON PAD</span>
+    <strong class="pad-name">${escapeHtml(padPath)}</strong>
     <a href="/${encodeURI(padPath)}/raw" target="_blank">raw</a>
     <a href="/${encodeURI(padPath)}/download">download</a>
     <a href="/">novo bloco</a>
-    <span id="status">carregado</span>
+    <span id="status"><span class="dot"></span><span id="status-text">carregado</span></span>
   </header>
-  <textarea id="editor" placeholder="Comece a digitar... é salvo automaticamente."></textarea>
+  <textarea id="editor" placeholder="Comece a digitar... o Don salva por você." autofocus spellcheck="false"></textarea>
 <script>
 (function() {
   const pad = ${safePad};
   const apiUrl = '/api/' + pad.split('/').map(encodeURIComponent).join('/');
   const editor = document.getElementById('editor');
   const status = document.getElementById('status');
+  const statusText = document.getElementById('status-text');
   editor.value = ${safeContent};
 
   let lastSaved = editor.value;
   let saveTimer = null;
   let dirty = false;
 
-  function setStatus(text) { status.textContent = text; }
+  function setStatus(text, isError) {
+    statusText.textContent = text;
+    status.classList.toggle('error', !!isError);
+  }
 
   async function save() {
     const value = editor.value;
@@ -162,7 +200,7 @@ function editorPage(padPath, content) {
       dirty = false;
       setStatus('salvo');
     } catch (err) {
-      setStatus('erro ao salvar — tentando de novo');
+      setStatus('erro ao salvar — tentando de novo', true);
       saveTimer = setTimeout(save, 2000);
     }
   }
